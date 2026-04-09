@@ -110,3 +110,45 @@ def cmd_stop():
     except Exception as e:
         log(f"Error: can't stop backup_service: {e}")
 
+
+def cmd_backups():
+    try:
+        files = os.listdir(BACKUPS_DIR)
+        log("Show backups list")
+        for f in files:
+            print(f)
+    except FileNotFoundError:
+        log("Error: can't find backups directory")
+
+
+def main():
+    if len(sys.argv) < 2:
+        log("Error: no command provided")
+        return
+
+    command = sys.argv[1]
+
+    if command == "create":
+        if len(sys.argv) < 3:
+            log("Error: missing schedule argument")
+        else:
+            cmd_create(sys.argv[2])
+    elif command == "list":
+        cmd_list()
+    elif command == "delete":
+        if len(sys.argv) < 3:
+            log("Error: missing index argument")
+        else:
+            cmd_delete(sys.argv[2])
+    elif command == "start":
+        cmd_start()
+    elif command == "stop":
+        cmd_stop()
+    elif command == "backups":
+        cmd_backups()
+    else:
+        log(f"Error: unknown command: {command}")
+
+
+if __name__ == "__main__":
+    main()
